@@ -1,0 +1,24 @@
+package com.learnWithAsif.springboot.service.impl;
+
+import com.learnWithAsif.springboot.entity.User;
+import com.learnWithAsif.springboot.respository.UserRepository;
+import com.learnWithAsif.springboot.service.UserService;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+@AllArgsConstructor
+@Slf4j
+public class UserServiceImpl implements UserService {
+
+
+    private UserRepository userRepository;
+
+    @Override
+    public User createUser(User user) {
+        log.info("create user api requested");
+        return userRepository.save(user);
+    }
+}
