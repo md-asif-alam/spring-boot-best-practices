@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,5 +30,12 @@ public class UserServiceImpl implements UserService {
         log.info("Get user by id api requested");
         Optional<User> userGetById =userRepository.findById(userId);
         return userGetById.get();
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        log.info("Get all user api requested");
+        List<User> allUsers = userRepository.findAll();
+        return allUsers;
     }
 }
