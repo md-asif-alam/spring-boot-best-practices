@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -20,5 +22,12 @@ public class UserServiceImpl implements UserService {
     public User createUser(User user) {
         log.info("create user api requested");
         return userRepository.save(user);
+    }
+
+    @Override
+    public User getUserById(Long userId) {
+        log.info("Get user by id api requested");
+        Optional<User> userGetById =userRepository.findById(userId);
+        return userGetById.get();
     }
 }
