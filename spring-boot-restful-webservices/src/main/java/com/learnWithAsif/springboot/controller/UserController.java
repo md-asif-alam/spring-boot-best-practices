@@ -1,5 +1,6 @@
 package com.learnWithAsif.springboot.controller;
 
+import com.learnWithAsif.springboot.dto.UserDto;
 import com.learnWithAsif.springboot.entity.User;
 import com.learnWithAsif.springboot.service.UserService;
 import lombok.AllArgsConstructor;
@@ -22,39 +23,39 @@ public class UserController {
 
     // Create user API: Post
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
         log.info("Create user api initiated");
-        User savedUser = userService.createUser(user);
+        UserDto savedUserDto = userService.createUser(userDto);
         log.info("create user api created successfully");
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+        return new ResponseEntity<>(savedUserDto, HttpStatus.CREATED);
     }
 
     //Get User by id API: GET
     @GetMapping("{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") Long userId){
+    public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long userId){
         log.info("Get user by id api initiated");
-        User user = userService.getUserById(userId);
+        UserDto userDto = userService.getUserById(userId);
         log.info("Get user by id api executed successfully");
-        return new ResponseEntity<>(user,HttpStatus.OK);
+        return new ResponseEntity<>(userDto,HttpStatus.OK);
     }
 
     //Get ALL users API: GET
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers(){
+    public ResponseEntity<List<UserDto>> getAllUsers(){
         log.info("Get all user api initiated");
-        List<User> allUsers = userService.getAllUsers();
+        List<UserDto> allUsersDto = userService.getAllUsers();
         log.info("Get all user api executed successfully");
-        return new ResponseEntity<>(allUsers,HttpStatus.OK);
+        return new ResponseEntity<>(allUsersDto,HttpStatus.OK);
     }
 
     //Update User API: PUT
     @PutMapping("{id}")
-    public ResponseEntity<User> updateUser(@PathVariable("id") Long userId, @RequestBody User user){
-        user.setId(userId);
+    public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long userId, @RequestBody UserDto userDto){
+        userDto.setId(userId);
         log.info("Update user api initiated");
-        User updatedUser = userService.updateUser(user);
+        UserDto updatedUserDto = userService.updateUser(userDto);
         log.info("Update user api executed successfully");
-        return new ResponseEntity<>(updatedUser,HttpStatus.OK);
+        return new ResponseEntity<>(updatedUserDto,HttpStatus.OK);
     }
 
     //Delete User API: DELETE

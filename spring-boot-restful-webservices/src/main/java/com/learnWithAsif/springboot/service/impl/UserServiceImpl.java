@@ -1,6 +1,8 @@
 package com.learnWithAsif.springboot.service.impl;
 
+import com.learnWithAsif.springboot.dto.UserDto;
 import com.learnWithAsif.springboot.entity.User;
+import com.learnWithAsif.springboot.mapper.UserMapper;
 import com.learnWithAsif.springboot.respository.UserRepository;
 import com.learnWithAsif.springboot.service.UserService;
 import lombok.AllArgsConstructor;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -20,39 +23,53 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public User createUser(User user) {
+    public UserDto createUser(UserDto userDto) {
         log.info("create user api requested");
-        return userRepository.save(user);
+
+        //converting UserDto to User JPA entity
+        User user= UserMapper.mapToUser(userDto);
+        User savedUser = userRepository.save(user);
+
+        //Converting User JPA entity to UserDto
+        UserDto savedUserDto=UserMapper.mapToUserDto(savedUser);
+        return savedUserDto;
     }
 
     @Override
-    public User getUserById(Long userId) {
+    public UserDto getUserById(Long userId) {
         log.info("Get user by id api requested");
         Optional<User> userGetById =userRepository.findById(userId);
-        return userGetById.get();
+        User user = userGetById.get();
+        UserDto userDto=UserMapper.mapToUserDto(user);
+        return userDto;
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         log.info("Get all user api requested");
         List<User> allUsers = userRepository.findAll();
-        return allUsers;
+
+        List<UserDto> allUsersDto = allUsers.stream()
+                .map(UserMapper::mapToUserDto)
+                .toList();
+
+        return allUsersDto;
     }
 
     @Override
-    public User updateUser(User user) {
+    public UserDto updateUser(UserDto userDto) {
 
         log.info("Update user api requested");
-        User existingUser = userRepository.findById(user.getId()).get();
+        User existingUser = userRepository.findById(userDto.getId()).get();
 
-        existingUser.setFirstName(user.getFirstName());
-        existingUser.setLastName(user.getLastName());
-        existingUser.setEmail(user.getEmail());
+        existingUser.setFirstName(userDto.getFirstName());
+        existingUser.setLastName(userDto.getLastName());
+        existingUser.setEmail(userDto.getEmail());
 
         log.info("Update user api operation done");
         User updatedUser = userRepository.save(existingUser);
 
-        return updatedUser;
+        return UserMapper.mapToUserDto(updatedUser);
     }
 
     @Override
