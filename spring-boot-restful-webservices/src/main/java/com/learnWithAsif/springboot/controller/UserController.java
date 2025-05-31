@@ -47,4 +47,14 @@ public class UserController {
         return new ResponseEntity<>(allUsers,HttpStatus.OK);
     }
 
+    //Update User API: PUT
+    @PutMapping("{id}")
+    public ResponseEntity<User> updateUser(@PathVariable("id") Long userId, @RequestBody User user){
+        user.setId(userId);
+        log.info("Update user api initiated");
+        User updatedUser = userService.updateUser(user);
+        log.info("Update user api executed successfully");
+        return new ResponseEntity<>(updatedUser,HttpStatus.OK);
+    }
+
 }
