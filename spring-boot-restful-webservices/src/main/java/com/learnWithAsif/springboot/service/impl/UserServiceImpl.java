@@ -54,4 +54,10 @@ public class UserServiceImpl implements UserService {
 
         return updatedUser;
     }
+
+    @Override
+    public void deleteUser(Long userId) {
+        log.info("Delete user api requested");
+        userRepository.deleteById(userId);
+    }
 }
