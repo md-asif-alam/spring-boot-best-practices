@@ -7,6 +7,7 @@ import com.learnWithAsif.springboot.respository.UserRepository;
 import com.learnWithAsif.springboot.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,16 +23,22 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
 
+    private ModelMapper modelMapper;
+
     @Override
     public UserDto createUser(UserDto userDto) {
         log.info("create user api requested");
 
         //converting UserDto to User JPA entity
-        User user= UserMapper.mapToUser(userDto);
+//        User user= UserMapper.mapToUser(userDto);
+        User user= modelMapper.map(userDto,User.class);
+
+
         User savedUser = userRepository.save(user);
 
         //Converting User JPA entity to UserDto
-        UserDto savedUserDto=UserMapper.mapToUserDto(savedUser);
+//        UserDto savedUserDto=UserMapper.mapToUserDto(savedUser);
+        UserDto savedUserDto=modelMapper.map(savedUser,UserDto.class);
         return savedUserDto;
     }
 
@@ -40,7 +47,8 @@ public class UserServiceImpl implements UserService {
         log.info("Get user by id api requested");
         Optional<User> userGetById =userRepository.findById(userId);
         User user = userGetById.get();
-        UserDto userDto=UserMapper.mapToUserDto(user);
+//        UserDto userDto=UserMapper.mapToUserDto(user);
+        UserDto userDto=modelMapper.map(user,UserDto.class);
         return userDto;
     }
 
@@ -49,8 +57,12 @@ public class UserServiceImpl implements UserService {
         log.info("Get all user api requested");
         List<User> allUsers = userRepository.findAll();
 
+//        List<UserDto> allUsersDto = allUsers.stream()
+//                .map(UserMapper::mapToUserDto)
+//                .toList();
+//
         List<UserDto> allUsersDto = allUsers.stream()
-                .map(UserMapper::mapToUserDto)
+                .map(user -> modelMapper.map(user,UserDto.class))
                 .toList();
 
         return allUsersDto;
@@ -69,7 +81,9 @@ public class UserServiceImpl implements UserService {
         log.info("Update user api operation done");
         User updatedUser = userRepository.save(existingUser);
 
-        return UserMapper.mapToUserDto(updatedUser);
+//        return UserMapper.mapToUserDto(updatedUser);
+
+        return modelMapper.map(updatedUser,UserDto.class);
     }
 
     @Override
