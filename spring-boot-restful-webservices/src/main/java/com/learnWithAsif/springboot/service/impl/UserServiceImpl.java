@@ -2,6 +2,7 @@ package com.learnWithAsif.springboot.service.impl;
 
 import com.learnWithAsif.springboot.dto.UserDto;
 import com.learnWithAsif.springboot.entity.User;
+import com.learnWithAsif.springboot.exception.ResourceNotFoundException;
 import com.learnWithAsif.springboot.mapper.UserMapper;
 import com.learnWithAsif.springboot.respository.UserRepository;
 import com.learnWithAsif.springboot.service.UserService;
@@ -45,8 +46,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserById(Long userId) {
         log.info("Get user by id api requested");
-        Optional<User> userGetById =userRepository.findById(userId);
-        User user = userGetById.get();
+//        Optional<User> userGetById =userRepository.findById(userId);
+//        User user = userGetById.get();
+
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", userId)
+        );
+
 //        UserDto userDto=UserMapper.mapToUserDto(user);
         UserDto userDto=modelMapper.map(user,UserDto.class);
         return userDto;
@@ -72,7 +78,11 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(UserDto userDto) {
 
         log.info("Update user api requested");
-        User existingUser = userRepository.findById(userDto.getId()).get();
+//        User existingUser = userRepository.findById(userDto.getId()).get();
+
+        User existingUser = userRepository.findById(userDto.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", userDto.getId())
+        );
 
         existingUser.setFirstName(userDto.getFirstName());
         existingUser.setLastName(userDto.getLastName());
@@ -89,6 +99,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long userId) {
         log.info("Delete user api requested");
+
+        User existingUser = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", userId)
+        );
+
+
         userRepository.deleteById(userId);
     }
 }
