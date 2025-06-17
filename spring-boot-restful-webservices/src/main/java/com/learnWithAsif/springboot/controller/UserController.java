@@ -3,6 +3,7 @@ package com.learnWithAsif.springboot.controller;
 import com.learnWithAsif.springboot.dto.UserDto;
 import com.learnWithAsif.springboot.entity.User;
 import com.learnWithAsif.springboot.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class UserController {
 
     // Create user API: Post
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
         log.info("Create user api initiated");
         UserDto savedUserDto = userService.createUser(userDto);
         log.info("create user api created successfully");
@@ -50,7 +51,7 @@ public class UserController {
 
     //Update User API: PUT
     @PutMapping("{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long userId, @RequestBody UserDto userDto){
+    public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long userId,@Valid @RequestBody UserDto userDto){
         userDto.setId(userId);
         log.info("Update user api initiated");
         UserDto updatedUserDto = userService.updateUser(userDto);
