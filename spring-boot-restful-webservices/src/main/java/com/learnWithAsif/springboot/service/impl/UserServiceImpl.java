@@ -2,6 +2,7 @@ package com.learnWithAsif.springboot.service.impl;
 
 import com.learnWithAsif.springboot.dto.UserDto;
 import com.learnWithAsif.springboot.entity.User;
+import com.learnWithAsif.springboot.exception.EmailAlreadyExistException;
 import com.learnWithAsif.springboot.exception.ResourceNotFoundException;
 import com.learnWithAsif.springboot.mapper.UserMapper;
 import com.learnWithAsif.springboot.respository.UserRepository;
@@ -29,6 +30,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createUser(UserDto userDto) {
         log.info("create user api requested");
+
+
+        Optional<User> userByEmail = userRepository.findByEmail(userDto.getEmail());
+        if(userByEmail.isPresent()){
+            throw new EmailAlreadyExistException("Email Already exist for User..");
+        }
 
         //converting UserDto to User JPA entity
 //        User user= UserMapper.mapToUser(userDto);
