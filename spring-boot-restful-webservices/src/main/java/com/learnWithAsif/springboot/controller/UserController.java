@@ -3,6 +3,9 @@ package com.learnWithAsif.springboot.controller;
 import com.learnWithAsif.springboot.dto.UserDto;
 import com.learnWithAsif.springboot.entity.User;
 import com.learnWithAsif.springboot.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +16,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(
+        name = "CRUD Rest API for User Resource",
+        description = "CRUD Rest API, Create, Delete, Update, GetALl and GetUserByID"
+)
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("api/users")
@@ -22,6 +30,14 @@ public class UserController {
 
     private UserService userService;
 
+    @Operation(
+            summary = "Create user REST API",
+            description = "Create user Rest API is used to save user in database"
+    )
+    @ApiResponse(
+            responseCode = "201",
+            description = "HTTP status 201 Created"
+    )
     // Create user API: Post
     @PostMapping
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
@@ -31,6 +47,14 @@ public class UserController {
         return new ResponseEntity<>(savedUserDto, HttpStatus.CREATED);
     }
 
+    @Operation(
+            summary = "GET user REST API by ID",
+            description = "GET user Rest API is used to GET user from database"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP status 200 OK"
+    )
     //Get User by id API: GET
     @GetMapping("{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long userId){
@@ -40,6 +64,14 @@ public class UserController {
         return new ResponseEntity<>(userDto,HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "GET user REST API",
+            description = "GET user Rest API is used to GET all users from database"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP status 200 OK"
+    )
     //Get ALL users API: GET
     @GetMapping
     public ResponseEntity<List<UserDto>> getAllUsers(){
@@ -49,6 +81,14 @@ public class UserController {
         return new ResponseEntity<>(allUsersDto,HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Update user REST API by id",
+            description = "Update user Rest API is used to update and save user in database"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP status 200 OK"
+    )
     //Update User API: PUT
     @PutMapping("{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long userId,@Valid @RequestBody UserDto userDto){
@@ -59,6 +99,14 @@ public class UserController {
         return new ResponseEntity<>(updatedUserDto,HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Delete user REST API by ID",
+            description = "Delete user Rest API is used to delete user in database"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP status 200 OK"
+    )
     //Delete User API: DELETE
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteUser(@PathVariable("id") Long userId){
