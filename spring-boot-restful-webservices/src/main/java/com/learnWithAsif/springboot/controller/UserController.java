@@ -30,6 +30,11 @@ public class UserController {
 
     private UserService userService;
 
+    @GetMapping("/health")
+    public String health(){
+        return "healthy";
+    }
+
     @Operation(
             summary = "Create user REST API",
             description = "Create user Rest API is used to save user in database"
