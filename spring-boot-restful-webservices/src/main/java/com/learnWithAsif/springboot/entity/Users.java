@@ -8,7 +8,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -21,11 +24,16 @@ public class Users implements UserDetails {
     private Long id;
     private String username;
     private String password;
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private ROLE role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role));
+        Set<SimpleGrantedAuthority> authorities=new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_"+role.name()));
+        authorities.addAll(role.getPermissions().stream().map(permission ->
+                new SimpleGrantedAuthority(permission.name())).collect(Collectors.toSet()));
+        return authorities;
     }
 
     @Override
