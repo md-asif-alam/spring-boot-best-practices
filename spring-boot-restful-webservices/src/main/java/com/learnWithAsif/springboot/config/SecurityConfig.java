@@ -10,6 +10,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -23,6 +24,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
     @Autowired
     private JWTAuthFilter jwtAuthFilter;
@@ -31,10 +33,11 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/authenticate").permitAll()
+                                .requestMatchers("/api/register").permitAll()
 //                                .requestMatchers("/api/users/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.GET,"/api/users/**").hasAuthority(Permission.READ.name())
-                                .requestMatchers(HttpMethod.POST,"/api/users/**").hasAuthority(Permission.WRITE.name())
-                                .requestMatchers(HttpMethod.POST,"/api/users/**").hasAuthority(Permission.DELETE.name())
+//                                .requestMatchers(HttpMethod.GET,"/api/users/**").hasAuthority(Permission.READ.name())
+//                                .requestMatchers(HttpMethod.POST,"/api/users/**").hasAuthority(Permission.WRITE.name())
+//                                .requestMatchers(HttpMethod.POST,"/api/users/**").hasAuthority(Permission.DELETE.name())
                         .anyRequest().authenticated());
 //                .httpBasic(withDefaults());
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

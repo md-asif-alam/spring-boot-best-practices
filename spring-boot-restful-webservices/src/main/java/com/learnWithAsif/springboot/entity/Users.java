@@ -30,7 +30,8 @@ public class Users implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<SimpleGrantedAuthority> authorities=new HashSet<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_"+role.name()));
+//        authorities.add(new SimpleGrantedAuthority("ROLE_"+role.name()));
+        authorities.add(new SimpleGrantedAuthority(role.name()));
         authorities.addAll(role.getPermissions().stream().map(permission ->
                 new SimpleGrantedAuthority(permission.name())).collect(Collectors.toSet()));
         return authorities;
